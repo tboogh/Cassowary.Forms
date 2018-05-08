@@ -1,0 +1,3 @@
+[submodule "Cassowary.net"]
+	path = Cassowary.net
+	url = git@github.com:martindevans/Cassowary.net.git

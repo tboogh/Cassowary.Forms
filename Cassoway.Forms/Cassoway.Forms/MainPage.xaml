@@ -1,18 +1,28 @@
-﻿<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              xmlns:local="clr-namespace:Cassoway.Forms"
              xmlns:layout="clr-namespace:Cassoway.Forms.Layout;assembly=Cassoway.Forms"
              x:Class="Cassoway.Forms.MainPage">
-	<layout:CassowaryLayout>
-		<Label Text="Welcome to Xamarin.Forms!" 
-		       VerticalOptions="Center" 
-		       HorizontalOptions="Center" />
-		<BoxView BackgroundColor="Red"/>
-		<BoxView BackgroundColor="Green"/>
-		<BoxView BackgroundColor="Blue"/>
-		<BoxView BackgroundColor="Yellow"/>
-	</layout:CassowaryLayout>
+    <ListView x:Name="List" RowHeight="200" HasUnevenRows="true">
+        <ListView.ItemTemplate>
+            <DataTemplate>
+                <ViewCell>
+                    <layout:CassowaryLayout>
+                        <Label Text="Welcome to Xamarin.Forms!" 
+                               VerticalOptions="CenterAndExpand" 
+                               HorizontalOptions="CenterAndExpand" 
+                               BackgroundColor="Red"/>
+                         <BoxView BackgroundColor="Blue"/> 
+                         <BoxView BackgroundColor="Green"/> 
+                        <!-- <BoxView BackgroundColor="Blue"/> -->
+                        <!-- <BoxView BackgroundColor="Yellow"/> -->
+                    </layout:CassowaryLayout>
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>
+	
 	
 
 </ContentPage>
