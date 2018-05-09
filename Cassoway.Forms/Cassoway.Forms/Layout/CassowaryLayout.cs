@@ -7,63 +7,47 @@ using Xamarin.Forms;
 
 namespace Cassoway.Forms.Layout
 {
-	public class CassowaryConstraint : BindableObject
-	{
-		public enum Attribute
-		{
-			Top,
-			Left,
-			Right,
-			Bottom
-		}
-
-		public static BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(View), typeof(CassowaryConstraint));
-		public static BindableProperty TargetProperty = BindableProperty.Create(nameof(Target), typeof(View), typeof(CassowaryConstraint));
-		public static BindableProperty SourceAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(CassowaryConstraint));
-		public static BindableProperty TargetAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(CassowaryConstraint));
-
-		public View Source
-		{
-			get => (View) GetValue(SourceProperty);
-			set => SetValue(SourceProperty, value);
-		}
-
-		public View Target
-		{
-			get => (View)GetValue(TargetProperty);
-			set => SetValue(TargetProperty, value);
-		}
-
-		public Attribute SourceAttribute
-		{
-			get => (Attribute)GetValue(SourceAttributeProperty);
-			set => SetValue(SourceAttributeProperty, value);
-		}
-
-		public Attribute TargetAttribute
-		{
-			get => (Attribute)GetValue(TargetAttributeProperty);
-			set => SetValue(TargetAttributeProperty, value);
-		}
-	}
-
 	public class CassowaryLayout : Layout<View>
     {
-		public static BindableProperty ConstraintsProperty = BindableProperty.Create(nameof(Constraints), typeof(IList<CassowaryConstraint>), typeof(CassowaryLayout));
+		public static BindableProperty ConstraintsProperty = BindableProperty.Create(nameof(Constraints), typeof(ConstraintCollection), typeof(CassowaryLayout), 
+			validateValue: (bindable, value) => value != null, 
+			propertyChanged: (bindable, oldvalue, newvalue) =>
+		{
+			if (oldvalue != null)
+				((ConstraintCollection)oldvalue).ItemChanged -= ((CassowaryLayout)bindable).OnDefinitionChanged;
+			
+			if (newvalue != null)
+				((ColumnDefinitionCollection)newvalue).ItemSizeChanged += ((CassowaryLayout)bindable).OnDefinitionChanged;
+		}, defaultValueCreator: bindable =>
+		{
+			var constraintCollection = new ConstraintCollection();
+			constraintCollection.ItemChanged += ((CassowaryLayout)bindable).OnDefinitionChanged;
+			return constraintCollection;
+		});
 
-        public CassowaryLayout()
+	    public CassowaryLayout()
         {
             Solver = new ClSimplexSolver();
-			Constraints = new List<CassowaryConstraint>();
         }
 
-		public IList<CassowaryConstraint> Constraints
+		public ConstraintCollection Constraints
 		{
-			get => (IList<CassowaryConstraint>) GetValue(ConstraintsProperty);
+			get => (ConstraintCollection) GetValue(ConstraintsProperty);
 			set => SetValue(ConstraintsProperty, value);
 		}
 
-	    private bool _hasConstraints =false;
+	    private void OnDefinitionChanged(object sender, EventArgs e)
+	    {
+		    UpdateConstraints();
+		    InvalidateLayout();
+	    }
+
+	    private void UpdateConstraints()
+	    {
+		    
+	    }
+	    
+	    private bool _hasConstraints = false;
         public ClSimplexSolver Solver { get; set; }
 	    protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
 	    {
@@ -72,31 +56,47 @@ namespace Cassoway.Forms.Layout
 
 	    protected override void LayoutChildren(double x, double y, double width, double height)
         {
-            var (labelRect, boxRect, box2Rect, label, boxView, box2View) = PerformLayout(width, height);
+            PerformLayout(width, height);
 
-	        LayoutChildIntoBoundingRegion(label, labelRect);
-	        LayoutChildIntoBoundingRegion(boxView, boxRect);
-	        LayoutChildIntoBoundingRegion(box2View, box2Rect);
+	        foreach (var child in Children)
+	        {
+		        var variables = _variables.Keys.Where(v => v.Contains(child.Id.ToString()));
+				var leftId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Left)));
+				var rightId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Right)));
+				var topId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Top)));
+				var bottomId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Bottom)));
+
+				var left = _variables[leftId];
+				var right = _variables[rightId];
+				var top = _variables[topId];
+				var bottom = _variables[bottomId];
+
+				var rect = Rectangle.FromLTRB(left.Value, top.Value, right.Value, bottom.Value);
+				LayoutChildIntoBoundingRegion(child, rect);
+	        }
+//	        LayoutChildIntoBoundingRegion(label, labelRect);
+//	        LayoutChildIntoBoundingRegion(boxView, boxRect);
+//	        LayoutChildIntoBoundingRegion(box2View, box2Rect);
         }
 
-	    private (Rectangle labelRect, Rectangle boxRect, Rectangle box2Rect, View label, View boxView, View box2View) PerformLayout(double width, double height)
+	    private void PerformLayout(double width, double height)
 	    {
 		    if (!_hasConstraints)
 			    CreateConstraints();
 
-		    var label = Children[0];
+		    Solver.BeginEdit(LayoutRight, LayoutBottom)
+			    .SuggestValue(LayoutRight, width)
+			    .SuggestValue(LayoutBottom, height)
+			    .EndEdit()
+			    .Solve();
+		    
+		    /*var label = Children[0];
 		    var boxView = Children[1];
 		    var box2View = Children[2];
 
 		    var labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
 
-		    Solver.BeginEdit(WindowLeft, WindowRight, WindowTop, WindowBottom)
-			    .SuggestValue(WindowLeft, 0)
-			    .SuggestValue(WindowTop, 0)
-			    .SuggestValue(WindowRight, width)
-			    .SuggestValue(WindowBottom, height)
-			    .EndEdit()
-			    .Solve();
+		    
 
 		    labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
 
@@ -112,85 +112,61 @@ namespace Cassoway.Forms.Layout
 		    var boxRect = Rectangle.FromLTRB(BoxLeft.Value, BoxTop.Value, BoxRight.Value, BoxBottom.Value);
 
 		    var box2Rect = Rectangle.FromLTRB(Box2Left.Value, Box2Top.Value, Box2Right.Value, Box2Bottom.Value);
-		    return (rect, boxRect, box2Rect, label, boxView, box2View);
+		    return (rect, boxRect, box2Rect, label, boxView, box2View);*/
 	    }
 
+	    private readonly Dictionary<string, ClVariable> _variables = new Dictionary<string, ClVariable>();
+	    
 	    private void CreateConstraints()
         {
             _hasConstraints = true;
-            
-            WindowLeft = new ClVariable("WindowLeft");
-            WindowRight = new ClVariable("WindowRight");
-            WindowTop = new ClVariable("WindowTop");
-            WindowBottom = new ClVariable("WindowBottom");
 
-            LabelLeft = new ClVariable(nameof(LabelLeft));
-            LabelTop = new ClVariable(nameof(LabelTop));
-            LabelRight = new ClVariable(nameof(LabelRight));
-            LabelBottom = new ClVariable(nameof(LabelBottom));
-			LabelHeight = new ClVariable(nameof(LabelHeight));
+			LayoutLeft = GetVariable($"{Id}.Left");
+			LayoutRight = GetVariable($"{Id}.Right");
+			LayoutTop = GetVariable($"{Id}.Top");
+			LayoutBottom = GetVariable($"{Id}.Bottom");
 
-			BoxLeft = new ClVariable(nameof(BoxLeft));
-			BoxTop = new ClVariable(nameof(BoxTop));
-			BoxRight = new ClVariable(nameof(BoxRight));
-			BoxBottom = new ClVariable(nameof(BoxBottom));
+	        Solver.AddStay(LayoutLeft);
+	        Solver.AddStay(LayoutTop);
+	        Solver.AddStay(LayoutRight);
+	        Solver.AddStay(LayoutBottom);
 
-			Box2Left = new ClVariable(nameof(Box2Left));
-            Box2Top = new ClVariable(nameof(Box2Top));
-            Box2Right = new ClVariable(nameof(Box2Right));
-            Box2Bottom = new ClVariable(nameof(Box2Bottom));
+	        foreach (var constraint in Constraints)
+	        {
+		        var sourceVariableName =
+			        $"{constraint.Source.Id.ToString()}.{GetAttributeName(constraint.SourceAttribute)}";
+		        var targetVariableName =
+			        $"{constraint.Target.Id.ToString()}.{GetAttributeName(constraint.TargetAttribute)}";
 
-			Solver.AddStay(WindowLeft);
-			Solver.AddStay(WindowTop);
-			Solver.AddStay(WindowRight);
-			Solver.AddStay(WindowBottom);
-			Solver.AddStay(LabelHeight);
+		        var sourceVariable = GetVariable(sourceVariableName);
+		        var targetVariable = GetVariable(targetVariableName);
 
-            Solver.AddConstraint(LabelLeft, LabelRight, WindowLeft, WindowRight,
-			                     (labelLeft, labelRight, windowLeft, windowRight) => labelLeft == windowLeft && labelRight == (windowRight * 0.5));
-            Solver.AddConstraint(LabelTop, WindowTop,
-			                     (labelTop, windowTop) => labelTop == windowTop);
-
-			Solver.AddConstraint(BoxLeft, BoxRight, LabelRight, WindowRight, (boxLeft, boxRight, labelRight, windowRight) => boxLeft == labelRight && boxRight == windowRight);
-			Solver.AddConstraint(BoxTop, BoxBottom, WindowTop, WindowBottom, (boxTop, boxBottom, windowTop, windowBottom) => boxTop == windowTop && boxBottom == windowBottom - 10);
-
-			Solver.AddConstraint(Box2Left, Box2Right, WindowLeft, BoxLeft, (box2Left, box2Right, windowLeft, boxLeft) => box2Left == windowLeft && box2Right== boxLeft);
-			Solver.AddConstraint(Box2Top, LabelTop, LabelHeight, (box2Top, labelTop, labelHeight) => box2Top == labelTop + labelHeight);
-			Solver.AddConstraint(Box2Bottom, WindowBottom, (box2Bottom, windowBottom) => box2Bottom == windowBottom - 10);
+				Solver.AddConstraint(sourceVariable, targetVariable, (source, target) => target * constraint.Multiplier == source);
+	        }
         }
 
-        public ClVariable LabelBottom { get; set; }
+	    private ClVariable GetVariable(string variableName)
+	    {
+		    if (_variables.TryGetValue(variableName, out var variable))
+			    return variable;
 
-        public ClVariable LabelRight { get; set; }
+		    variable = new ClVariable(variableName);
+		    _variables[variableName] = variable;
 
-        public ClVariable LabelLeft { get; set; }
+		    return variable;
+	    }
 
-        public ClVariable LabelTop { get; set; }
+	    private static string GetAttributeName(CassowaryConstraint.Attribute attribute)
+	    {
+		    return Enum.GetName(typeof(CassowaryConstraint.Attribute), attribute);
+	    }
 
-		public ClVariable LabelHeight { get; set; }      
+        public ClVariable LayoutTop { get; set; }
 
-		public ClVariable BoxBottom { get; set; }
+        public ClVariable LayoutBottom { get; set; }
 
-        public ClVariable BoxRight { get; set; }
+        public ClVariable LayoutRight { get; set; }
 
-        public ClVariable BoxLeft { get; set; }
-
-        public ClVariable BoxTop { get; set; }
-
-		public ClVariable Box2Bottom { get; set; }
-
-        public ClVariable Box2Right { get; set; }
-
-        public ClVariable Box2Left { get; set; }
-
-        public ClVariable Box2Top { get; set; }
-
-        public ClVariable WindowTop { get; set; }
-
-        public ClVariable WindowBottom { get; set; }
-
-        public ClVariable WindowRight { get; set; }
-
-        public ClVariable WindowLeft { get; set; }
+        public ClVariable LayoutLeft { get; set; }
     }
 }

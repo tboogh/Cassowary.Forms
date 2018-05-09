@@ -4,31 +4,34 @@
              xmlns:local="clr-namespace:Cassoway.Forms"
              xmlns:layout="clr-namespace:Cassoway.Forms.Layout;assembly=Cassoway.Forms"
              x:Class="Cassoway.Forms.MainPage">
-    <ListView x:Name="List" RowHeight="200" HasUnevenRows="true">
+    <!--<ListView x:Name="List" RowHeight="200" HasUnevenRows="true">
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
-                    <layout:CassowaryLayout x:Name="Layout">
+                    
+                </ViewCell>
+            </DataTemplate>
+        </ListView.ItemTemplate>
+    </ListView>-->
+    
+    <layout:CassowaryLayout x:Name="Layout">
                         <layout:CassowaryLayout.Constraints>
-                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Left" TargetAttribute="Left" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference TestView}" Target="{x:Reference Layout}"
+                                                        SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
+             
+                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" Multiplier="0.5"></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
                         </layout:CassowaryLayout.Constraints>
-                        <Label x:Name="Label" Text="Welcome to Xamarin.Forms!" 
-                               VerticalOptions="CenterAndExpand" 
-                               HorizontalOptions="CenterAndExpand" 
-                               BackgroundColor="Red"/>
-                        <!--<BoxView BackgroundColor="Blue"/> 
+                        <!-- <Label x:Name="Label" Text="Welcome to Xamarin.Forms!"  -->
+                        <!--        VerticalOptions="CenterAndExpand"  -->
+                        <!--        HorizontalOptions="CenterAndExpand"  -->
+                        <!--        BackgroundColor="Red"/> -->
+                        <BoxView x:Name="TestView" BackgroundColor="Blue"/>
+                        <!--
                          <BoxView BackgroundColor="Green"/>--> 
                         <!-- <BoxView BackgroundColor="Blue"/> -->
                         <!-- <BoxView BackgroundColor="Yellow"/> -->
                     </layout:CassowaryLayout>
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>
-	
-	
 
 </ContentPage>
