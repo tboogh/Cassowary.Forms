@@ -7,56 +7,115 @@ using Xamarin.Forms;
 
 namespace Cassoway.Forms.Layout
 {
-    public class CassowaryLayout : Layout<View>
+	public class CassowaryConstraint : BindableObject
+	{
+		public enum Attribute
+		{
+			Top,
+			Left,
+			Right,
+			Bottom
+		}
+
+		public static BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(View), typeof(CassowaryConstraint));
+		public static BindableProperty TargetProperty = BindableProperty.Create(nameof(Target), typeof(View), typeof(CassowaryConstraint));
+		public static BindableProperty SourceAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(CassowaryConstraint));
+		public static BindableProperty TargetAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(CassowaryConstraint));
+
+		public View Source
+		{
+			get => (View) GetValue(SourceProperty);
+			set => SetValue(SourceProperty, value);
+		}
+
+		public View Target
+		{
+			get => (View)GetValue(TargetProperty);
+			set => SetValue(TargetProperty, value);
+		}
+
+		public Attribute SourceAttribute
+		{
+			get => (Attribute)GetValue(SourceAttributeProperty);
+			set => SetValue(SourceAttributeProperty, value);
+		}
+
+		public Attribute TargetAttribute
+		{
+			get => (Attribute)GetValue(TargetAttributeProperty);
+			set => SetValue(TargetAttributeProperty, value);
+		}
+	}
+
+	public class CassowaryLayout : Layout<View>
     {
+		public static BindableProperty ConstraintsProperty = BindableProperty.Create(nameof(Constraints), typeof(IList<CassowaryConstraint>), typeof(CassowaryLayout));
+
         public CassowaryLayout()
         {
             Solver = new ClSimplexSolver();
+			Constraints = new List<CassowaryConstraint>();
         }
 
-        private bool _hasConstraints =false;
+		public IList<CassowaryConstraint> Constraints
+		{
+			get => (IList<CassowaryConstraint>) GetValue(ConstraintsProperty);
+			set => SetValue(ConstraintsProperty, value);
+		}
+
+	    private bool _hasConstraints =false;
         public ClSimplexSolver Solver { get; set; }
+	    protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
+	    {
+			return new SizeRequest(new Size(widthConstraint, heightConstraint));
+	    }
 
-		protected override void LayoutChildren(double x, double y, double width, double height)
+	    protected override void LayoutChildren(double x, double y, double width, double height)
         {
-            if (!_hasConstraints)
-                CreateConstraints();
+            var (labelRect, boxRect, box2Rect, label, boxView, box2View) = PerformLayout(width, height);
 
-			var label = Children[0];
-            var boxView = Children[1];
-            var box2View = Children[2];
-
-			var labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
-
-			Solver.BeginEdit(WindowLeft, WindowRight, WindowTop, WindowBottom)
-                .SuggestValue(WindowLeft, x)
-                .SuggestValue(WindowTop, y)
-                .SuggestValue(WindowRight, width)
-                .SuggestValue(WindowBottom, height)                  
-                .EndEdit()
-  		        .Solve();
-
-			labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
-
-			Solver.BeginEdit(LabelHeight)
-				  .SuggestValue(LabelHeight, labelSizeRequest.Request.Height)
-				  .EndEdit()
-				  .Solve();
-                           
-			var heightValue = LabelHeight.Value;
-			System.Diagnostics.Debug.WriteLine($"Height {heightValue}");
-			var rect = Rectangle.FromLTRB(LabelLeft.Value, LabelTop.Value, LabelRight.Value, heightValue);
-
-            LayoutChildIntoBoundingRegion(label, rect);
-
-			var boxRect = Rectangle.FromLTRB(BoxLeft.Value, BoxTop.Value, BoxRight.Value, BoxBottom.Value);
-			LayoutChildIntoBoundingRegion(boxView, boxRect);
-
-			var box2Rect = Rectangle.FromLTRB(Box2Left.Value, Box2Top.Value, Box2Right.Value, Box2Bottom.Value);
-			LayoutChildIntoBoundingRegion(box2View, box2Rect);
+	        LayoutChildIntoBoundingRegion(label, labelRect);
+	        LayoutChildIntoBoundingRegion(boxView, boxRect);
+	        LayoutChildIntoBoundingRegion(box2View, box2Rect);
         }
 
-        private void CreateConstraints()
+	    private (Rectangle labelRect, Rectangle boxRect, Rectangle box2Rect, View label, View boxView, View box2View) PerformLayout(double width, double height)
+	    {
+		    if (!_hasConstraints)
+			    CreateConstraints();
+
+		    var label = Children[0];
+		    var boxView = Children[1];
+		    var box2View = Children[2];
+
+		    var labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
+
+		    Solver.BeginEdit(WindowLeft, WindowRight, WindowTop, WindowBottom)
+			    .SuggestValue(WindowLeft, 0)
+			    .SuggestValue(WindowTop, 0)
+			    .SuggestValue(WindowRight, width)
+			    .SuggestValue(WindowBottom, height)
+			    .EndEdit()
+			    .Solve();
+
+		    labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
+
+		    Solver.BeginEdit(LabelHeight)
+			    .SuggestValue(LabelHeight, labelSizeRequest.Request.Height)
+			    .EndEdit()
+			    .Solve();
+
+		    var heightValue = LabelHeight.Value;
+		    System.Diagnostics.Debug.WriteLine($"Height {heightValue}");
+		    var rect = Rectangle.FromLTRB(LabelLeft.Value, LabelTop.Value, LabelRight.Value, heightValue);
+
+		    var boxRect = Rectangle.FromLTRB(BoxLeft.Value, BoxTop.Value, BoxRight.Value, BoxBottom.Value);
+
+		    var box2Rect = Rectangle.FromLTRB(Box2Left.Value, Box2Top.Value, Box2Right.Value, Box2Bottom.Value);
+		    return (rect, boxRect, box2Rect, label, boxView, box2View);
+	    }
+
+	    private void CreateConstraints()
         {
             _hasConstraints = true;
             

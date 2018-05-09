@@ -149,9 +149,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Xamarin.Forms" Version="2.5.0.280555" />
-    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1"/>
+    <PackageReference Include="Microsoft.NETCore.UniversalWindowsPlatform" Version="6.0.1" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Cassowary.NetStandard\Cassowary.NetStandard.csproj">
+      <Project>{0ea000df-4178-4678-8cb5-0d4dbe73bdc8}</Project>
+      <Name>Cassowary.NetStandard</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cassoway.Forms\Cassoway.Forms.csproj">
       <Project>{E7391989-0EF5-4D4F-A4F6-F7F6B4AB01D1}</Project>
       <Name>Cassoway.Forms</Name>

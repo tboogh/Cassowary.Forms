@@ -8,13 +8,19 @@
         <ListView.ItemTemplate>
             <DataTemplate>
                 <ViewCell>
-                    <layout:CassowaryLayout>
-                        <Label Text="Welcome to Xamarin.Forms!" 
+                    <layout:CassowaryLayout x:Name="Layout">
+                        <layout:CassowaryLayout.Constraints>
+                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Left" TargetAttribute="Left" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                            <layout:CassowaryConstraint Source="{x:Reference Label}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                        </layout:CassowaryLayout.Constraints>
+                        <Label x:Name="Label" Text="Welcome to Xamarin.Forms!" 
                                VerticalOptions="CenterAndExpand" 
                                HorizontalOptions="CenterAndExpand" 
                                BackgroundColor="Red"/>
-                         <BoxView BackgroundColor="Blue"/> 
-                         <BoxView BackgroundColor="Green"/> 
+                        <!--<BoxView BackgroundColor="Blue"/> 
+                         <BoxView BackgroundColor="Green"/>--> 
                         <!-- <BoxView BackgroundColor="Blue"/> -->
                         <!-- <BoxView BackgroundColor="Yellow"/> -->
                     </layout:CassowaryLayout>
