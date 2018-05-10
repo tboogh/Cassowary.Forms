@@ -12,17 +12,6 @@ namespace Cassoway.Forms
 		public MainPage()
 		{
 			InitializeComponent();
-			//List.ItemsSource = new string[]{
-            //  "mono",
-            //  "monodroid",
-            //  "monotouch",
-            //  "monorail",
-            //  "monodevelop",
-            //  "monotone",
-            //  "monopoly",
-            //  "monomodal",
-            //  "mononucleosis"
-            //};
 		}
 	}
 }

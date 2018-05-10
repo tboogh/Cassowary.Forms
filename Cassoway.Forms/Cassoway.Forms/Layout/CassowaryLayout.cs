@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using Cassowary;
 using Xamarin.Forms;
@@ -9,6 +10,8 @@ namespace Cassoway.Forms.Layout
 {
 	public class CassowaryLayout : Layout<View>
     {
+	    const double Epsilon = 0.00001;
+	    
 		public static BindableProperty ConstraintsProperty = BindableProperty.Create(nameof(Constraints), typeof(ConstraintCollection), typeof(CassowaryLayout), 
 			validateValue: (bindable, value) => value != null, 
 			propertyChanged: (bindable, oldvalue, newvalue) =>
@@ -47,8 +50,9 @@ namespace Cassoway.Forms.Layout
 		    
 	    }
 	    
-	    private bool _hasConstraints = false;
+	    private bool _hasConstraints;
         public ClSimplexSolver Solver { get; set; }
+	    
 	    protected override SizeRequest OnMeasure(double widthConstraint, double heightConstraint)
 	    {
 			return new SizeRequest(new Size(widthConstraint, heightConstraint));
@@ -58,25 +62,34 @@ namespace Cassoway.Forms.Layout
         {
             PerformLayout(width, height);
 
+	        
 	        foreach (var child in Children)
 	        {
-		        var variables = _variables.Keys.Where(v => v.Contains(child.Id.ToString()));
-				var leftId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Left)));
-				var rightId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Right)));
-				var topId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Top)));
-				var bottomId = variables.FirstOrDefault(v => v.Contains(GetAttributeName(CassowaryConstraint.Attribute.Bottom)));
+				// support width, height & center
+				var left = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Left, 0.0);
+		        var right = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Right, 0.0);
+		        var top = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Top, 0.0);
+		        var bottom = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Bottom, 0.0);            
+		        var centerX = GetVariableValue(child.Id, CassowaryConstraint.Attribute.CenterX, 0.0);
+		        var centerY = GetVariableValue(child.Id, CassowaryConstraint.Attribute.CenterY, 0.0);
+		        var vWidth = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Width, 0.0);
+		        var vHeight = GetVariableValue(child.Id, CassowaryConstraint.Attribute.Height, 0.0);
+		        
+				var rect = Rectangle.FromLTRB(left, top, right, bottom);
+				if (Math.Abs(vWidth) > Epsilon )
+					rect.Width = vWidth;
+				
+				if (Math.Abs(vHeight) > Epsilon)
+				    rect.Height = vHeight;
 
-				var left = _variables[leftId];
-				var right = _variables[rightId];
-				var top = _variables[topId];
-				var bottom = _variables[bottomId];
+		        if (Math.Abs(centerY) > Epsilon && Math.Abs(rect.Center.Y - centerY) > Epsilon)
+				    rect = rect.Offset(0, centerY * 0.5);
 
-				var rect = Rectangle.FromLTRB(left.Value, top.Value, right.Value, bottom.Value);
+				if (Math.Abs(centerX) > Epsilon && Math.Abs(rect.Center.X - centerX) > Epsilon)
+					rect = rect.Offset(centerX * 0.5, 0);
+
 				LayoutChildIntoBoundingRegion(child, rect);
 	        }
-//	        LayoutChildIntoBoundingRegion(label, labelRect);
-//	        LayoutChildIntoBoundingRegion(boxView, boxRect);
-//	        LayoutChildIntoBoundingRegion(box2View, box2Rect);
         }
 
 	    private void PerformLayout(double width, double height)
@@ -84,67 +97,145 @@ namespace Cassoway.Forms.Layout
 		    if (!_hasConstraints)
 			    CreateConstraints();
 
-		    Solver.BeginEdit(LayoutRight, LayoutBottom)
-			    .SuggestValue(LayoutRight, width)
-			    .SuggestValue(LayoutBottom, height)
+		    var layoutRight = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Right)}");
+		    var layoutBottom = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Bottom)}");
+		    var layoutWidth = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Width)}");
+		    var layoutHeight = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Height)}");
+		    var layoutCenterX = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.CenterX)}");
+		    var layoutCenterY = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.CenterY)}");
+		    
+		    Solver.BeginEdit(layoutRight, layoutBottom, layoutWidth, layoutHeight, layoutCenterX, layoutCenterY)
+			    .SuggestValue(layoutRight, width)
+			    .SuggestValue(layoutBottom, height)
+			    .SuggestValue(layoutWidth, width)
+			    .SuggestValue(layoutHeight, height)
+			    .SuggestValue(layoutCenterX, width * 0.5)
+			    .SuggestValue(layoutCenterY, height * 0.5)
 			    .EndEdit()
 			    .Solve();
-		    
-		    /*var label = Children[0];
-		    var boxView = Children[1];
-		    var box2View = Children[2];
-
-		    var labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
-
-		    
-
-		    labelSizeRequest = label.Measure(LabelRight.Value, double.PositiveInfinity);
-
-		    Solver.BeginEdit(LabelHeight)
-			    .SuggestValue(LabelHeight, labelSizeRequest.Request.Height)
-			    .EndEdit()
-			    .Solve();
-
-		    var heightValue = LabelHeight.Value;
-		    System.Diagnostics.Debug.WriteLine($"Height {heightValue}");
-		    var rect = Rectangle.FromLTRB(LabelLeft.Value, LabelTop.Value, LabelRight.Value, heightValue);
-
-		    var boxRect = Rectangle.FromLTRB(BoxLeft.Value, BoxTop.Value, BoxRight.Value, BoxBottom.Value);
-
-		    var box2Rect = Rectangle.FromLTRB(Box2Left.Value, Box2Top.Value, Box2Right.Value, Box2Bottom.Value);
-		    return (rect, boxRect, box2Rect, label, boxView, box2View);*/
 	    }
 
 	    private readonly Dictionary<string, ClVariable> _variables = new Dictionary<string, ClVariable>();
-	    
+
 	    private void CreateConstraints()
         {
             _hasConstraints = true;
 
-			LayoutLeft = GetVariable($"{Id}.Left");
-			LayoutRight = GetVariable($"{Id}.Right");
-			LayoutTop = GetVariable($"{Id}.Top");
-			LayoutBottom = GetVariable($"{Id}.Bottom");
+			var layoutLeft = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Left)}");
+			var layoutRight = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Right)}");
+			var layoutTop = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Top)}");
+			var layoutBottom = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Bottom)}");
+			var layoutWidth = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Width)}");
+	        var layoutHeight = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.Height)}");
+	        var layoutCenterX = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.CenterX)}");
+	        var layoutCenterY = GetVariable($"{Id}.{GetAttributeName(CassowaryConstraint.Attribute.CenterY)}");
+	        
+	        Solver.AddStay(layoutLeft);
+	        Solver.AddStay(layoutTop);
+	        Solver.AddStay(layoutRight);
+	        Solver.AddStay(layoutBottom);
+	        Solver.AddStay(layoutWidth);
+	        Solver.AddStay(layoutHeight);
+	        Solver.AddStay(layoutCenterX);
+	        Solver.AddStay(layoutCenterY);
 
-	        Solver.AddStay(LayoutLeft);
-	        Solver.AddStay(LayoutTop);
-	        Solver.AddStay(LayoutRight);
-	        Solver.AddStay(LayoutBottom);
+	        foreach (var child in Children)
+	        {
+		        var widthVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Width)}");
+		        var leftVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Left)}");
+		        var rightVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Right)}");
+		        
+		        var heightVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Height)}");
+		        var topVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Top)}");
+		        var bottomVariable = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.Bottom)}");
 
+				var centerX = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.CenterX)}");
+				var centerY = GetVariable($"{child.Id.ToString()}.{GetAttributeName(CassowaryConstraint.Attribute.CenterY)}");
+                
+				//Solver.AddConstraint(centerY, topVariable, heightVariable, (cy, t, h) => cy == t + (h * 0.5));
+				Solver.AddConstraint(heightVariable, topVariable, bottomVariable, centerY, (h, t, b, cy) => h == b - t && cy == t + h * 0.5);
+		        Solver.AddConstraint(widthVariable, leftVariable, rightVariable, centerX, (h, t, b, cy) => h == b - t && cy == t + h * 0.5);
+
+		  //      Solver.AddConstraint(widthVariable, leftVariable, rightVariable, (w, l, r) => w == r - l);
+		  //      Solver.AddConstraint(heightVariable, topVariable, bottomVariable, (w, l, r) => w == r - l);
+				//Solver.AddConstraint(heightVariable, topVariable, bottomVariable, (h, t, b) => b == t + h);
+				//Solver.AddConstraint(heightVariable, centerY, bottomVariable, (h, cy, b) => b == cy + (h * 0.5));
+				//Solver.AddConstraint(heightVariable, centerY, topVariable, (h, cy, t) => t == cy - (h * 0.5));
+	        }
+	        
 	        foreach (var constraint in Constraints)
 	        {
 		        var sourceVariableName =
 			        $"{constraint.Source.Id.ToString()}.{GetAttributeName(constraint.SourceAttribute)}";
-		        var targetVariableName =
-			        $"{constraint.Target.Id.ToString()}.{GetAttributeName(constraint.TargetAttribute)}";
 
-		        var sourceVariable = GetVariable(sourceVariableName);
-		        var targetVariable = GetVariable(targetVariableName);
+				var sourceVariable = GetVariable(sourceVariableName);
 
-				Solver.AddConstraint(sourceVariable, targetVariable, (source, target) => target * constraint.Multiplier == source);
+				if (constraint.Target != null){
+					var targetVariableName =
+                    $"{constraint.Target.Id.ToString()}.{GetAttributeName(constraint.TargetAttribute)}";
+
+					var targetVariable = GetVariable(targetVariableName);
+
+					Solver.AddConstraint(sourceVariable, targetVariable, GetExpression(constraint.RelatedBy, constraint.Multiplier, constraint.Constant));
+				} else 
+				{
+					Solver.AddConstraint(sourceVariable, GetSingleExpression(constraint.RelatedBy, constraint.Multiplier, constraint.Constant));
+				}
 	        }
         }
 
+		private Expression<Func<double, bool>> GetSingleExpression(CassowaryConstraint.Relation constraintRelatedBy, double multiplier, double constant)
+        {
+            switch (constraintRelatedBy)
+            {
+                case CassowaryConstraint.Relation.Equal:
+					return (source) => source == multiplier + constant;
+                case CassowaryConstraint.Relation.GreaterThan:
+					return (source) => source >= multiplier + constant;
+                case CassowaryConstraint.Relation.LessThan:
+					return (source) => source <= multiplier + constant;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(constraintRelatedBy), constraintRelatedBy, null);
+            }
+        }
+
+	    private Expression<Func<double, double, bool>> GetExpression(CassowaryConstraint.Relation constraintRelatedBy, double constraintMultiplier, double constraintConstant)
+	    {
+		    switch (constraintRelatedBy)
+		    {
+			    case CassowaryConstraint.Relation.Equal:
+				    return EqualsExpression(constraintMultiplier, constraintConstant);
+			    case CassowaryConstraint.Relation.GreaterThan:
+				    return GreaterThanExpression(constraintMultiplier, constraintConstant);
+			    case CassowaryConstraint.Relation.LessThan:
+				    return LessThanExpression(constraintMultiplier, constraintConstant);
+			    default:
+				    throw new ArgumentOutOfRangeException(nameof(constraintRelatedBy), constraintRelatedBy, null);
+		    }
+	    }
+
+	    private Expression<Func<double, double, bool>> GreaterThanExpression(double multiplier, double constant)
+	    {
+		    return (source, target) => source >= target * multiplier + constant;;
+	    }
+	    
+	    private Expression<Func<double, double, bool>> LessThanExpression(double multiplier, double constant)
+	    {
+		    return (source, target) => source <= target * multiplier + constant;;
+	    }
+	    
+	    private Expression<Func<double, double, bool>> EqualsExpression(double multiplier, double constant)
+	    {
+		    return (source, target) => source == target * multiplier + constant;;
+	    }
+
+	    private double GetVariableValue(string variableId, double defaultValue)
+	    {
+		    if (_variables.TryGetValue(variableId, out var variable))
+			    return variable.Value;
+		    return defaultValue;
+	    }
+	    
 	    private ClVariable GetVariable(string variableName)
 	    {
 		    if (_variables.TryGetValue(variableName, out var variable))
@@ -155,18 +246,21 @@ namespace Cassoway.Forms.Layout
 
 		    return variable;
 	    }
+	    
+	    private double GetVariableValue(Guid childId, CassowaryConstraint.Attribute attribute, double defaultValue)
+	    {
+		    var name = GetName(childId, attribute);
+		    return GetVariableValue(name, defaultValue);
+	    }
+
+	    private string GetName(Guid childId, CassowaryConstraint.Attribute attribute)
+	    {
+		    return $"{childId.ToString()}.{GetAttributeName(attribute)}";
+	    }
 
 	    private static string GetAttributeName(CassowaryConstraint.Attribute attribute)
 	    {
 		    return Enum.GetName(typeof(CassowaryConstraint.Attribute), attribute);
 	    }
-
-        public ClVariable LayoutTop { get; set; }
-
-        public ClVariable LayoutBottom { get; set; }
-
-        public ClVariable LayoutRight { get; set; }
-
-        public ClVariable LayoutLeft { get; set; }
     }
 }

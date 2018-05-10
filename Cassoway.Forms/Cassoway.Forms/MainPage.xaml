@@ -4,34 +4,56 @@
              xmlns:local="clr-namespace:Cassoway.Forms"
              xmlns:layout="clr-namespace:Cassoway.Forms.Layout;assembly=Cassoway.Forms"
              x:Class="Cassoway.Forms.MainPage">
-    <!--<ListView x:Name="List" RowHeight="200" HasUnevenRows="true">
-        <ListView.ItemTemplate>
-            <DataTemplate>
-                <ViewCell>
-                    
-                </ViewCell>
-            </DataTemplate>
-        </ListView.ItemTemplate>
-    </ListView>-->
-    
-    <layout:CassowaryLayout x:Name="Layout">
-                        <layout:CassowaryLayout.Constraints>
-                            <layout:CassowaryConstraint Source="{x:Reference TestView}" Target="{x:Reference Layout}"
-                                                        SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
-             
-                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" Multiplier="0.5"></layout:CassowaryConstraint>
-                            <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                        </layout:CassowaryLayout.Constraints>
-                        <!-- <Label x:Name="Label" Text="Welcome to Xamarin.Forms!"  -->
-                        <!--        VerticalOptions="CenterAndExpand"  -->
-                        <!--        HorizontalOptions="CenterAndExpand"  -->
-                        <!--        BackgroundColor="Red"/> -->
-                        <BoxView x:Name="TestView" BackgroundColor="Blue"/>
-                        <!--
-                         <BoxView BackgroundColor="Green"/>--> 
-                        <!-- <BoxView BackgroundColor="Blue"/> -->
-                        <!-- <BoxView BackgroundColor="Yellow"/> -->
-                    </layout:CassowaryLayout>
+        <layout:CassowaryLayout x:Name="Layout">
+            <layout:CassowaryLayout.Constraints>
+                <layout:CassowaryConstraint Source="{x:Reference TestView}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" Multiplier="0.45"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
 
+                <layout:CassowaryConstraint Source="{x:Reference GreenView}" Target="{x:Reference TestView}" SourceAttribute="Left" TargetAttribute="Right"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" Multiplier="0.3" ></layout:CassowaryConstraint>
+
+                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Left" TargetAttribute="Left" Constant="30">></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"  ></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" ></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:CassowaryConstraint>
+                
+                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterY" TargetAttribute="CenterY" Multiplier="0.75"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Constant="-20" Multiplier="0.5"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Height" TargetAttribute="Height" Constant="-20" Multiplier="0.3"></layout:CassowaryConstraint>
+
+                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Top" TargetAttribute="Bottom" Constant="20"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" SourceAttribute="Width" Constant="250"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+
+                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" Target="{x:Reference Toggle}" SourceAttribute="Bottom" TargetAttribute="Top" Constant="-20"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" SourceAttribute="Width" Constant="250"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+
+                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="Right" TargetAttribute="Left" Constant="-20"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+
+                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="Left" TargetAttribute="Right" Constant="20"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:CassowaryConstraint>
+                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+            </layout:CassowaryLayout.Constraints>
+        
+            <BoxView x:Name="TestView" BackgroundColor="Blue"/>
+            <BoxView x:Name="GreenView" BackgroundColor="Green"/>
+            <BoxView x:Name="RedView" BackgroundColor="Red"/>
+            <Button x:Name="Toggle" BackgroundColor="Navy" TextColor="White" Text="Toggle Layout"></Button>
+            <Label x:Name="BottomLabel" BackgroundColor="White" Text="Bottom"/>
+            <Label x:Name="TopLabel" BackgroundColor="White" Text="Top"/>
+            <Label x:Name="LeftLabel" BackgroundColor="White" Text="Left"/>
+            <Label x:Name="RightLabel" BackgroundColor="White" Text="Right"/>
+        </layout:CassowaryLayout>
 </ContentPage>
