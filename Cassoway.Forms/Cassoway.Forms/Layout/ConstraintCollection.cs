@@ -5,7 +5,7 @@ using Xamarin.Forms;
 
 namespace Cassoway.Forms.Layout
 {
-	public sealed class ConstraintCollection : ConstraintCollection<CassowaryConstraint>
+	public sealed class ConstraintCollection : ConstraintCollection<Constraint>
 	{
 		
 	}

@@ -4,49 +4,54 @@
              xmlns:local="clr-namespace:Cassoway.Forms"
              xmlns:layout="clr-namespace:Cassoway.Forms.Layout;assembly=Cassoway.Forms"
              x:Class="Cassoway.Forms.MainPage">
-        <layout:CassowaryLayout x:Name="Layout">
-            <layout:CassowaryLayout.Constraints>
-                <layout:CassowaryConstraint Source="{x:Reference TestView}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" Multiplier="0.45"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TestView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <layout:ConstraintCollection x:Key="Constraints">
+                <layout:Constraint Source="{x:Reference TestView}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TestView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TestView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}" Multiplier="0.45"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TestView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" ></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference GreenView}" Target="{x:Reference TestView}" SourceAttribute="Left" TargetAttribute="Right"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference GreenView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" Multiplier="0.3" ></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference GreenView}" Target="{x:Reference TestView}" SourceAttribute="Left" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Top" Target="{x:Reference Layout}" ></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" Target="{x:Reference Layout}"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" SourceAttribute="Bottom" TargetAttribute="Bottom" Target="{x:Reference Layout}" Multiplier="0.3" ></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Left" TargetAttribute="Left" Constant="30">></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"  ></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" ></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Left" TargetAttribute="Left" Constant="30">></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"  ></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" ></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:Constraint>
                 
-                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterY" TargetAttribute="CenterY" Multiplier="0.75"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Constant="-20" Multiplier="0.5"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Height" TargetAttribute="Height" Constant="-20" Multiplier="0.3"></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterY" TargetAttribute="CenterY" Multiplier="0.75"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Constant="-20" Multiplier="0.5"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Height" TargetAttribute="Height" Constant="-20" Multiplier="0.3"></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Top" TargetAttribute="Bottom" Constant="20"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" SourceAttribute="Width" Constant="250"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX" Multiplier="0.5"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Top" TargetAttribute="Bottom" Constant="20"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Width" Constant="100"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="100"></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" Target="{x:Reference Toggle}" SourceAttribute="Bottom" TargetAttribute="Top" Constant="-20"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" SourceAttribute="Width" Constant="250"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference TopLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Toggle}" SourceAttribute="Bottom" TargetAttribute="Top" Constant="-20"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" SourceAttribute="Width" Constant="250"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="Right" TargetAttribute="Left" Constant="-20"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference LeftLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference Toggle}" SourceAttribute="Right" TargetAttribute="Left" Constant="-20"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
 
-                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="Left" TargetAttribute="Right" Constant="20"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:CassowaryConstraint>
-                <layout:CassowaryConstraint Source="{x:Reference RightLabel}" SourceAttribute="Height" Constant="50"></layout:CassowaryConstraint>
-            </layout:CassowaryLayout.Constraints>
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Toggle}" SourceAttribute="Left" TargetAttribute="Right" Constant="20"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
+            </layout:ConstraintCollection>
+            
+        </ResourceDictionary>
+    </ContentPage.Resources>
         
+        <layout:CassowaryLayout x:Name="Layout" Constraints="{StaticResource Constraints}">
             <BoxView x:Name="TestView" BackgroundColor="Blue"/>
             <BoxView x:Name="GreenView" BackgroundColor="Green"/>
             <BoxView x:Name="RedView" BackgroundColor="Red"/>

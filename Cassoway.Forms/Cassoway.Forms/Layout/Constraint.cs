@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Cassoway.Forms.Layout
 {
-    public class CassowaryConstraint : BindableObject, IConstraint
+    public class Constraint : BindableObject, IConstraint
     {
         public enum Attribute
         {
@@ -26,38 +26,38 @@ namespace Cassoway.Forms.Layout
 		    LessThan
 	    }
 
-		public static BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(View), typeof(CassowaryConstraint), propertyChanged:(bindable, oldValue, newValue) => {
-			var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty SourceProperty = BindableProperty.Create(nameof(Source), typeof(View), typeof(Constraint), propertyChanged:(bindable, oldValue, newValue) => {
+			var constraint = ((Constraint)bindable);
 			constraint.OnItemChanged(constraint);
 		});      
 
-		public static BindableProperty TargetProperty = BindableProperty.Create(nameof(Target), typeof(View), typeof(CassowaryConstraint), propertyChanged:(bindable, oldValue, newValue) => {
-            var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty TargetProperty = BindableProperty.Create(nameof(Target), typeof(View), typeof(Constraint), propertyChanged:(bindable, oldValue, newValue) => {
+            var constraint = ((Constraint)bindable);
             constraint.OnItemChanged(constraint);
         });
 
-		public static BindableProperty SourceAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(CassowaryConstraint), Attribute.None, propertyChanged:(bindable, oldValue, newValue) => {
-            var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty SourceAttributeProperty = BindableProperty.Create(nameof(SourceAttribute), typeof(Attribute), typeof(Constraint), Attribute.None, propertyChanged:(bindable, oldValue, newValue) => {
+            var constraint = ((Constraint)bindable);
             constraint.OnItemChanged(constraint);
         }); 
 
-		public static BindableProperty TargetAttributeProperty = BindableProperty.Create(nameof(TargetAttribute), typeof(Attribute), typeof(CassowaryConstraint), Attribute.None, propertyChanged:(bindable, oldValue, newValue) => {
-            var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty TargetAttributeProperty = BindableProperty.Create(nameof(TargetAttribute), typeof(Attribute), typeof(Constraint), Attribute.None, propertyChanged:(bindable, oldValue, newValue) => {
+            var constraint = ((Constraint)bindable);
             constraint.OnItemChanged(constraint);
         });    
 
-		public static BindableProperty MultiplierProperty = BindableProperty.Create(nameof(Multiplier), typeof(double), typeof(CassowaryConstraint), 1.0, propertyChanged:(bindable, oldValue, newValue) => {
-            var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty MultiplierProperty = BindableProperty.Create(nameof(Multiplier), typeof(double), typeof(Constraint), 1.0, propertyChanged:(bindable, oldValue, newValue) => {
+            var constraint = ((Constraint)bindable);
             constraint.OnItemChanged(constraint);
         }); 
 
-		public static BindableProperty ConstantProperty = BindableProperty.Create(nameof(Constant), typeof(double), typeof(CassowaryConstraint), 0.0, propertyChanged:(bindable, oldValue, newValue) => {
-            var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty ConstantProperty = BindableProperty.Create(nameof(Constant), typeof(double), typeof(Constraint), 0.0, propertyChanged:(bindable, oldValue, newValue) => {
+            var constraint = ((Constraint)bindable);
             constraint.OnItemChanged(constraint);
         });  
 	    
-		public static BindableProperty RelatedByProperty = BindableProperty.Create(nameof(RelatedBy), typeof(Relation), typeof(CassowaryConstraint), Relation.Equal, propertyChanged:(bindable, oldValue, newValue) => {
-		    var constraint = ((CassowaryConstraint)bindable);
+		public static BindableProperty RelatedByProperty = BindableProperty.Create(nameof(RelatedBy), typeof(Relation), typeof(Constraint), Relation.Equal, propertyChanged:(bindable, oldValue, newValue) => {
+		    var constraint = ((Constraint)bindable);
 		    constraint.OnItemChanged(constraint);
 	    }); 
 
@@ -108,11 +108,11 @@ namespace Cassoway.Forms.Layout
         internal ClVariable Variable { get; set; }
 	    
 
-	    public CassowaryConstraint()
+	    public Constraint()
 		{
 		}
 
-		private void OnItemChanged(CassowaryConstraint constraint)
+		private void OnItemChanged(Constraint constraint)
         {
 			ItemChanged?.Invoke(this, EventArgs.Empty);
         }
