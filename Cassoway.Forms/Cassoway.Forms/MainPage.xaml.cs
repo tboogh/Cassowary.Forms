@@ -9,9 +9,17 @@ namespace Cassoway.Forms
 {
 	public partial class MainPage : ContentPage
 	{
+		bool _toggle;
+
 		public MainPage()
 		{
 			InitializeComponent();
+		}
+
+		void Handle_Clicked(object sender, System.EventArgs e)
+		{
+			_toggle = !_toggle;
+			Layout.Constraints = (Layout.ConstraintCollection)Resources[_toggle ? "Constraints" : "AltConstraints"];
 		}
 	}
 }

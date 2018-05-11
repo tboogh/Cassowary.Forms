@@ -47,18 +47,54 @@
                 <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference RightLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
             </layout:ConstraintCollection>
-            
+
+            <layout:ConstraintCollection x:Key="AltConstraints">
+                <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="Top" TargetAttribute="Top"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference TopLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference TopLabel}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Multiplier="0.5"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RedView}" SourceAttribute="Height" Constant="50"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference TopLabel}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Multiplier="0.5"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference RightLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference GreenView}" Target="{x:Reference RightLabel}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" Target="{x:Reference RightLabel}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" Target="{x:Reference RightLabel}" SourceAttribute="Width" TargetAttribute="Width"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference GreenView}" SourceAttribute="Height" Constant="50"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference GreenView}" SourceAttribute="CenterY" TargetAttribute="CenterY"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference RedView}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" Target="{x:Reference GreenView}" SourceAttribute="Width" TargetAttribute="Width"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference LeftLabel}" SourceAttribute="Height" Constant="50" RelatedBy="LessThan"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference LeftLabel}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50" RelatedBy="LessThan"></layout:Constraint>
+
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference LeftLabel}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference BottomLabel}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:Constraint>
+            </layout:ConstraintCollection>
         </ResourceDictionary>
     </ContentPage.Resources>
         
-        <layout:CassowaryLayout x:Name="Layout" Constraints="{StaticResource Constraints}">
+        <layout:CassowaryLayout x:Name="Layout" Constraints="{StaticResource AltConstraints}">
             <BoxView x:Name="TestView" BackgroundColor="Blue"/>
             <BoxView x:Name="GreenView" BackgroundColor="Green"/>
             <BoxView x:Name="RedView" BackgroundColor="Red"/>
-            <Button x:Name="Toggle" BackgroundColor="Navy" TextColor="White" Text="Toggle Layout"></Button>
-            <Label x:Name="BottomLabel" BackgroundColor="White" Text="Bottom"/>
-            <Label x:Name="TopLabel" BackgroundColor="White" Text="Top"/>
-            <Label x:Name="LeftLabel" BackgroundColor="White" Text="Left"/>
-            <Label x:Name="RightLabel" BackgroundColor="White" Text="Right"/>
+            <Button x:Name="Toggle" BackgroundColor="Navy" TextColor="White" Text="Toggle Layout" Clicked="Handle_Clicked"></Button>
+            <Label x:Name="BottomLabel" BackgroundColor="Cyan" Text="Bottom"/>
+            <Label x:Name="TopLabel" BackgroundColor="BlueViolet" Text="Top"/>
+            <Label x:Name="LeftLabel" BackgroundColor="DarkRed" Text="Left"/>
+            <Label x:Name="RightLabel" BackgroundColor="Gold" Text="Right"/>
         </layout:CassowaryLayout>
 </ContentPage>

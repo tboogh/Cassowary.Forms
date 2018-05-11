@@ -21,6 +21,8 @@ namespace Cassoway.Forms.Layout
 			
 			if (newvalue != null)
 				((ConstraintCollection)newvalue).ItemChanged += ((CassowaryLayout)bindable).OnDefinitionChanged;
+
+			((CassowaryLayout)bindable).OnDefinitionChanged(bindable, EventArgs.Empty);
 		}, defaultValueCreator: bindable =>
 		{
 			var constraintCollection = new ConstraintCollection();
@@ -47,7 +49,13 @@ namespace Cassoway.Forms.Layout
 
 	    private void UpdateConstraints()
 	    {
-		    
+		    var constraints = Solver.ConstraintMap.Keys;
+			foreach (var constraint in constraints.ToList())
+		    {
+			    Solver.RemoveConstraint(constraint);
+		    }
+
+		    _hasConstraints = false;
 	    }
 	    
 	    private bool _hasConstraints;
@@ -152,15 +160,8 @@ namespace Cassoway.Forms.Layout
 				var centerX = GetVariable($"{child.Id.ToString()}.{GetAttributeName(Constraint.Attribute.CenterX)}");
 				var centerY = GetVariable($"{child.Id.ToString()}.{GetAttributeName(Constraint.Attribute.CenterY)}");
                 
-				//Solver.AddConstraint(centerY, topVariable, heightVariable, (cy, t, h) => cy == t + (h * 0.5));
-				Solver.AddConstraint(heightVariable, topVariable, bottomVariable, centerY, (h, t, b, cy) => h == b - t && cy == t + h * 0.5);
-		        Solver.AddConstraint(widthVariable, leftVariable, rightVariable, centerX, (h, t, b, cy) => h == b - t && cy == t + h * 0.5);
-
-		  //      Solver.AddConstraint(widthVariable, leftVariable, rightVariable, (w, l, r) => w == r - l);
-		  //      Solver.AddConstraint(heightVariable, topVariable, bottomVariable, (w, l, r) => w == r - l);
-				//Solver.AddConstraint(heightVariable, topVariable, bottomVariable, (h, t, b) => b == t + h);
-				//Solver.AddConstraint(heightVariable, centerY, bottomVariable, (h, cy, b) => b == cy + (h * 0.5));
-				//Solver.AddConstraint(heightVariable, centerY, topVariable, (h, cy, t) => t == cy - (h * 0.5));
+		        AddMinMaxCenterDistanceConstraint(heightVariable, topVariable, bottomVariable, centerY);
+		        AddMinMaxCenterDistanceConstraint(widthVariable, leftVariable, rightVariable, centerX);
 	        }
 	        
 	        foreach (var constraint in Constraints)
@@ -184,7 +185,13 @@ namespace Cassoway.Forms.Layout
 	        }
         }
 
-		private Expression<Func<double, bool>> GetSingleExpression(Constraint.Relation constraintRelatedBy, double multiplier, double constant)
+	    private void AddMinMaxCenterDistanceConstraint(ClVariable distance, ClVariable min, ClVariable max, ClVariable center)
+	    {
+		    Solver.AddConstraint(distance, min, max, center,
+			    (distanceValue, minValue, maxValue, centerValue) => distanceValue == maxValue - minValue && centerValue == minValue + distanceValue * 0.5);
+	    }
+
+	    private Expression<Func<double, bool>> GetSingleExpression(Constraint.Relation constraintRelatedBy, double multiplier, double constant)
         {
             switch (constraintRelatedBy)
             {
