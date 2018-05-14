@@ -30,7 +30,7 @@
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX" Multiplier="0.5"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Top" TargetAttribute="Bottom" Constant="20"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Width" Constant="100"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="100"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Height" TargetAttribute="Height"></layout:Constraint>
 
                 <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference TopLabel}" Target="{x:Reference Toggle}" SourceAttribute="Bottom" TargetAttribute="Top" Constant="-20"></layout:Constraint>
@@ -77,7 +77,7 @@
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference LeftLabel}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50" RelatedBy="LessThan"></layout:Constraint>
+                <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
 
                 <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference LeftLabel}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
@@ -88,8 +88,10 @@
     </ContentPage.Resources>
         
         <layout:CassowaryLayout x:Name="Layout" Constraints="{StaticResource AltConstraints}">
-            <BoxView x:Name="TestView" BackgroundColor="Blue"/>
-            <BoxView x:Name="GreenView" BackgroundColor="Green"/>
+            
+            <BoxView x:Name="GreenView" BackgroundColor="Green" />
+
+            <BoxView x:Name="TestView" BackgroundColor="Blue" />
             <BoxView x:Name="RedView" BackgroundColor="Red"/>
             <Button x:Name="Toggle" BackgroundColor="Navy" TextColor="White" Text="Toggle Layout" Clicked="Handle_Clicked"></Button>
             <Label x:Name="BottomLabel" BackgroundColor="Cyan" Text="Bottom"/>

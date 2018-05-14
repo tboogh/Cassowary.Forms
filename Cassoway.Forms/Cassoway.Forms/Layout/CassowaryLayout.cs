@@ -2,14 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Net;
 using System.Text;
 using Cassowary;
 using Xamarin.Forms;
+using Xamarin.Forms.Xaml;
 
 namespace Cassoway.Forms.Layout
 {
-	public class CassowaryLayout : Layout<View>
+public class CassowaryLayout : Layout<View>
     {
+		public static BindableProperty ViewConstraintsProperty = BindableProperty.CreateAttached("ViewConstraints", typeof(ConstraintCollection), typeof(CassowaryLayout), null, propertyChanged:UpdateViewConstraints);
+
+	    private static void UpdateViewConstraints(BindableObject bindable, object oldvalue, object newvalue)
+	    {
+		    
+	    }
+	    
+	    public static ConstraintCollection GetViewConstraints (BindableObject view)
+	    {
+		    return (ConstraintCollection)view.GetValue (ViewConstraintsProperty);
+	    }
+
+	    public static void SetViewConstraints (BindableObject view, ConstraintCollection value)
+	    {
+		    view.SetValue (ViewConstraintsProperty, value);
+	    }
+	    
 	    const double Epsilon = 0.00001;
 	    
 		public static BindableProperty ConstraintsProperty = BindableProperty.Create(nameof(Constraints), typeof(ConstraintCollection), typeof(CassowaryLayout), 

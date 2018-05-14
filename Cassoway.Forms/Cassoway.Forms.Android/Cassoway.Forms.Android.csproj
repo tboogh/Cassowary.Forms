@@ -8,7 +8,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>Cassoway.Forms.Droid</RootNamespace>
     <AssemblyName>Cassoway.Forms.Android</AssemblyName>
-    <TargetFrameworkVersion>v8.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v8.1</TargetFrameworkVersion>
     <AndroidApplication>True</AndroidApplication>
     <AndroidResgenFile>Resources\Resource.designer.cs</AndroidResgenFile>
     <AndroidResgenClass>Resource</AndroidResgenClass>
@@ -82,7 +82,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Cassoway.Forms\Cassoway.Forms.csproj">
-      <Project>{E7391989-0EF5-4D4F-A4F6-F7F6B4AB01D1}</Project>
+      <Project>{5F374C5A-9087-42CC-8A97-E850D10BDCBC}</Project>
       <Name>Cassoway.Forms</Name>
     </ProjectReference>
   </ItemGroup>
