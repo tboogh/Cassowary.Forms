@@ -4,7 +4,7 @@ using Xamarin.Forms;
 
 namespace Cassoway.Forms.Layout
 {
-    public class Constraint : BindableObject, IConstraint
+	public class Constraint : BindableObject, IConstraint
     {
         public enum Attribute
         {

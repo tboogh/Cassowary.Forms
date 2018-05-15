@@ -22,10 +22,10 @@
                 <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference GreenView}" SourceAttribute="Right" TargetAttribute="Right" ></layout:Constraint>
                 <layout:Constraint Source="{x:Reference RedView}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:Constraint>
                 
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterY" TargetAttribute="CenterY" Multiplier="0.75"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Constant="-20" Multiplier="0.5"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Height" TargetAttribute="Height" Constant="-20" Multiplier="0.3"></layout:Constraint>
+                <!-- <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX"></layout:Constraint> -->
+                <!-- <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="CenterY" TargetAttribute="CenterY" Multiplier="0.75"></layout:Constraint> -->
+                <!-- <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Width" TargetAttribute="Width" Constant="-20" Multiplier="0.5"></layout:Constraint> -->
+                <!-- <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Height" TargetAttribute="Height" Constant="-20" Multiplier="0.3"></layout:Constraint> -->
 
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Layout}" SourceAttribute="CenterX" TargetAttribute="CenterX" Multiplier="0.5"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference Toggle}" SourceAttribute="Top" TargetAttribute="Bottom" Constant="20"></layout:Constraint>
@@ -78,11 +78,6 @@
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" Target="{x:Reference GreenView}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
                 <layout:Constraint Source="{x:Reference BottomLabel}" SourceAttribute="Height" Constant="50"></layout:Constraint>
-
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference LeftLabel}" SourceAttribute="Left" TargetAttribute="Left"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference RightLabel}" SourceAttribute="Right" TargetAttribute="Right"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference BottomLabel}" SourceAttribute="Top" TargetAttribute="Bottom"></layout:Constraint>
-                <layout:Constraint Source="{x:Reference Toggle}" Target="{x:Reference Layout}" SourceAttribute="Bottom" TargetAttribute="Bottom"></layout:Constraint>
             </layout:ConstraintCollection>
         </ResourceDictionary>
     </ContentPage.Resources>
